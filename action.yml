@@ -1,0 +1,16 @@
+name: Release Upload
+author: Trinovantes
+description: Upload multiple assets to an existing release
+inputs:
+  release_id:
+    description: The id for the release
+    required: true
+  upload_url:
+    description: The upload URL for the release
+    required: true
+  files:
+    description: Files to upload
+    required: true
+runs:
+  using: node12
+  main: dist/index.js
