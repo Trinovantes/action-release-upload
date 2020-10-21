@@ -9,7 +9,7 @@ async function main() {
         if (error instanceof Error) {
             core.setFailed(error.message)
         } else {
-            core.setFailed('Failed')
+            core.setFailed(error)
         }
     }
 }
