@@ -6,14 +6,14 @@ import { lstatSync, readFileSync } from 'fs'
 import globby from 'globby'
 import path from 'path'
 
-import { Args, getAndValidateArgs } from './Args'
+import { IArgs, getAndValidateArgs } from './Args'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
 // ----------------------------------------------------------------------------
 
 export default class UploadAssets {
-    readonly args: Args
+    readonly args: IArgs
     client: InstanceType<typeof GitHub>
     context: Context
 
@@ -43,7 +43,7 @@ export default class UploadAssets {
 
     private async upload(filePath: string) {
         await this.client.repos.uploadReleaseAsset({
-            data: readFileSync(filePath),
+            data: readFileSync(filePath, 'utf-8'),
             name: path.basename(filePath),
             url: this.args.uploadUrl,
             headers: {
