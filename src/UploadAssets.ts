@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import { GitHub } from '@actions/github/lib/utils'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
 import { lstatSync, readFileSync } from 'fs'
@@ -14,7 +13,7 @@ import { IArgs, getAndValidateArgs } from './Args'
 
 export default class UploadAssets {
     readonly args: IArgs
-    client: InstanceType<typeof GitHub>
+    client: Octokit
     context: Context
 
     constructor() {
