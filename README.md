@@ -19,7 +19,7 @@ None
 ```
 - name: Update Nightly Build Release
   id: update_nightly
-  uses: Trinovantes/action-automatic-release@v2.0.0
+  uses: Trinovantes/action-automatic-release@master
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
@@ -27,7 +27,7 @@ None
     auto_release_title: Nightly Build
 
 - name: Upload Asset to Nightly Build Release
-  uses:  Trinovantes/action-release-upload@v1.0.0
+  uses:  Trinovantes/action-release-upload@master
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
