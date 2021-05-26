@@ -1,11 +1,11 @@
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { lstatSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import globby from 'globby'
 import path from 'path'
-
 import { IArgs, getAndValidateArgs } from './Args'
+import { getType } from 'mime'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
@@ -31,7 +31,6 @@ export default class UploadAssets {
         const uploadRequests: Array<Promise<void>> = []
 
         for (const filePath of paths) {
-            core.info(`Uploading: ${filePath}`)
             uploadRequests.push(this.upload(filePath))
         }
 
@@ -41,13 +40,17 @@ export default class UploadAssets {
     }
 
     private async upload(filePath: string) {
+        const data = readFileSync(filePath)
+        const mime = getType(filePath) ?? 'application/octet-stream'
+        core.info(`Uploading "${filePath}" len:${data.length} mime:${mime}`)
+
         await this.client.repos.uploadReleaseAsset({
-            data: readFileSync(filePath, 'utf-8'),
+            data: data as unknown as string,
             name: path.basename(filePath),
             url: this.args.uploadUrl,
             headers: {
-                'content-length': lstatSync(filePath).size,
-                'content-type': 'application/octet-stream',
+                'content-length': data.length,
+                'content-type': mime,
             },
             owner: this.context.repo.owner,
             repo: this.context.repo.repo,
