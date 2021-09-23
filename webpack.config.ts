@@ -1,5 +1,4 @@
 import path from 'path'
-import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 
 const isDev = (process.env.NODE_ENV === 'development')
@@ -28,18 +27,6 @@ const config: webpack.Configuration = {
                     'ts-loader',
                 ],
             },
-        ],
-    },
-
-    optimization: {
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    compress: {
-                        drop_console: !isDev,
-                    },
-                },
-            }),
         ],
     },
 }
