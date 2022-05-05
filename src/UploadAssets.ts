@@ -1,11 +1,11 @@
+import { readFileSync } from 'fs'
+import path from 'path'
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { readFileSync } from 'fs'
 import globby from 'globby'
-import path from 'path'
-import { IArgs, getAndValidateArgs } from './Args'
 import { getType } from 'mime'
+import { IArgs, getAndValidateArgs } from './Args'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
