@@ -6,15 +6,15 @@ export enum ArgName {
     UPLOAD_URL = 'upload_url',
 }
 
-export type IArgs = {
+export interface Args {
     releaseId: number
     uploadUrl: string
     files: Array<string>
 }
 
-export function getAndValidateArgs(): IArgs {
+export function getAndValidateArgs(): Args {
     const inputFilesStr = core.getInput(ArgName.FILES, { required: true })
-    const args: IArgs = {
+    const args: Args = {
         releaseId: JSON.parse(core.getInput(ArgName.RELEASE_ID, { required: true })) as number,
         uploadUrl: core.getInput(ArgName.UPLOAD_URL, { required: true }),
         files: inputFilesStr.split(/\r?\n/),

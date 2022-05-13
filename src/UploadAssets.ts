@@ -3,24 +3,26 @@ import path from 'path'
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import globby from 'globby'
+import { globby } from 'globby'
 import { getType } from 'mime'
-import { IArgs, getAndValidateArgs } from './Args'
+import { Args, getAndValidateArgs } from './Args'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
 // ----------------------------------------------------------------------------
 
 export default class UploadAssets {
-    readonly args: IArgs
+    readonly args: Args
     client: Octokit
     context: Context
 
     constructor() {
         core.startGroup('Initializing UploadAssets')
+
         this.args = getAndValidateArgs()
         this.client = new Octokit({ auth: process.env.GITHUB_TOKEN })
         this.context = new Context()
+
         core.endGroup()
     }
 
