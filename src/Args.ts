@@ -6,7 +6,7 @@ export enum ArgName {
     UPLOAD_URL = 'upload_url',
 }
 
-export interface Args {
+export type Args = {
     releaseId: number
     uploadUrl: string
     files: Array<string>
