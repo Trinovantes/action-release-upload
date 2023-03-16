@@ -3,7 +3,6 @@ import path from 'path'
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { globby } from 'globby'
 import { getType } from 'mime'
 import { Args, getAndValidateArgs } from './Args'
 
@@ -29,6 +28,7 @@ export default class UploadAssets {
     async run(): Promise<void> {
         core.startGroup('Starting to upload assets')
 
+        const { globby } = await import('globby')
         const paths = await globby(this.args.files)
         const uploadRequests: Array<Promise<void>> = []
 
