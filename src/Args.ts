@@ -1,11 +1,5 @@
 import * as core from '@actions/core'
 
-export enum ArgName {
-    FILES = 'files',
-    RELEASE_ID = 'release_id',
-    UPLOAD_URL = 'upload_url',
-}
-
 export type Args = {
     releaseId: number
     uploadUrl: string
@@ -13,11 +7,10 @@ export type Args = {
 }
 
 export function getAndValidateArgs(): Args {
-    const inputFilesStr = core.getInput(ArgName.FILES, { required: true })
     const args: Args = {
-        releaseId: JSON.parse(core.getInput(ArgName.RELEASE_ID, { required: true })) as number,
-        uploadUrl: core.getInput(ArgName.UPLOAD_URL, { required: true }),
-        files: inputFilesStr.split(/\r?\n/),
+        releaseId: parseInt(core.getInput('release_id', { required: true })),
+        uploadUrl: core.getInput('upload_url', { required: true }),
+        files: core.getInput('files', { required: true }).split(/\r?\n/),
     }
 
     return args
