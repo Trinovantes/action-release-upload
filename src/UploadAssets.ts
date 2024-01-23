@@ -3,8 +3,8 @@ import path from 'node:path'
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { getType } from 'mime'
 import { Args, getAndValidateArgs } from './Args'
+import Mime from 'mime'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
@@ -43,7 +43,7 @@ export default class UploadAssets {
 
     private async upload(filePath: string) {
         const data = readFileSync(filePath)
-        const mime = getType(filePath) ?? 'application/octet-stream'
+        const mime = Mime.getType(filePath) ?? 'application/octet-stream'
         core.info(`Uploading "${filePath}" len:${data.length} mime:${mime}`)
 
         await this.client.repos.uploadReleaseAsset({
