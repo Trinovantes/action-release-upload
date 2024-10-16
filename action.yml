@@ -1,6 +1,6 @@
 name: Release Upload
 author: Trinovantes
-description: Upload multiple assets to an existing release
+description: Upload multiple assets to an existing GitHub release
 
 inputs:
   release_id:
@@ -14,5 +14,19 @@ inputs:
     required: true
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: composite
+  steps:
+    - uses: oven-sh/setup-bun@v2
+
+    - run: |-
+        cd ${{ github.action_path }}
+        bun install
+        cd -
+      shell: bash
+
+    - run: bun run ${{ github.action_path }}/src/main.ts
+      shell: bash
+      env:
+        release_id: ${{ inputs.release_id }}
+        upload_url: ${{ inputs.upload_url }}
+        files: ${{ inputs.files }}

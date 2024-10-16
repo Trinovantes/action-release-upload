@@ -27,13 +27,13 @@ None
     auto_release_title: Nightly Build
 
 - name: Upload Asset to Nightly Build Release
-  uses:  Trinovantes/action-release-upload@master
+  uses: Trinovantes/action-release-upload@master
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
     release_id: ${{ steps.update_nightly.outputs.release_id }}
     upload_url: ${{ steps.update_nightly.outputs.upload_url }}
-    files: |
+    files: |-
         ./dist/*.html
         ./dist/*.css
         ./dist/*.js

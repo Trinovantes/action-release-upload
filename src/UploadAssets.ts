@@ -3,41 +3,38 @@ import path from 'node:path'
 import * as core from '@actions/core'
 import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { Args, getAndValidateArgs } from './Args'
+import { ActionArgs, getActionArgs } from './ActionArgs.js'
 import Mime from 'mime'
+import { globby } from 'globby'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
 // ----------------------------------------------------------------------------
 
 export default class UploadAssets {
-    readonly args: Args
-    client: Octokit
-    context: Context
+    readonly args: ActionArgs
+    readonly ghClient: Octokit
+    readonly ghContext: Context
 
-    constructor() {
-        core.startGroup('Initializing UploadAssets')
-
-        this.args = getAndValidateArgs()
-        this.client = new Octokit({ auth: process.env.GITHUB_TOKEN })
-        this.context = new Context()
-
-        core.endGroup()
+    constructor(githubToken: string) {
+        this.args = getActionArgs()
+        this.ghClient = new Octokit({ auth: githubToken })
+        this.ghContext = new Context()
     }
 
     async run(): Promise<void> {
+        core.info(JSON.stringify(this.args, undefined, 4))
+
         core.startGroup('Starting to upload assets')
+        {
+            const cwd = process.cwd()
+            const filePaths = await globby(this.args.files, { cwd })
+            core.info(`Found ${filePaths.length} files from ${cwd}`)
+            core.info(JSON.stringify(filePaths, undefined, 4))
 
-        const { globby } = await import('globby')
-        const paths = await globby(this.args.files)
-        const uploadRequests: Array<Promise<void>> = []
-
-        for (const filePath of paths) {
-            uploadRequests.push(this.upload(filePath))
+            const uploadRequests = filePaths.map((filePath) => this.upload(filePath))
+            await Promise.all(uploadRequests)
         }
-
-        await Promise.all(uploadRequests)
-
         core.endGroup()
     }
 
@@ -46,7 +43,7 @@ export default class UploadAssets {
         const mime = Mime.getType(filePath) ?? 'application/octet-stream'
         core.info(`Uploading "${filePath}" len:${data.length} mime:${mime}`)
 
-        await this.client.repos.uploadReleaseAsset({
+        await this.ghClient.repos.uploadReleaseAsset({
             data: data as unknown as string,
             name: path.basename(filePath),
             url: this.args.uploadUrl,
@@ -54,8 +51,8 @@ export default class UploadAssets {
                 'content-length': data.length,
                 'content-type': mime,
             },
-            owner: this.context.repo.owner,
-            repo: this.context.repo.repo,
+            owner: this.ghContext.repo.owner,
+            repo: this.ghContext.repo.repo,
             release_id: this.args.releaseId,
         })
     }
