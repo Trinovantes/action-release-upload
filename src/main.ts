@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import UploadAssets from './UploadAssets'
+import UploadAssets from './UploadAssets.ts'
 
 try {
     const githubToken = process.env.GITHUB_TOKEN

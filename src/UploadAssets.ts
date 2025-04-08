@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import * as core from '@actions/core'
-import { Context } from '@actions/github/lib/context'
 import { Octokit } from '@octokit/rest'
-import { ActionArgs, getActionArgs } from './ActionArgs.js'
+import { type ActionArgs, getActionArgs } from './ActionArgs.ts'
 import Mime from 'mime'
 import { globby } from 'globby'
+import { Context } from '@actions/github/lib/context.js'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
