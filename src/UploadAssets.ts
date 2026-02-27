@@ -5,7 +5,7 @@ import { Octokit } from '@octokit/rest'
 import { type ActionArgs, getActionArgs } from './ActionArgs.ts'
 import Mime from 'mime'
 import { globby } from 'globby'
-import { Context } from '@actions/github/lib/context.js'
+import { context } from '@actions/github'
 
 // ----------------------------------------------------------------------------
 // UploadAssets
@@ -14,12 +14,12 @@ import { Context } from '@actions/github/lib/context.js'
 export default class UploadAssets {
     readonly args: ActionArgs
     readonly ghClient: Octokit
-    readonly ghContext: Context
+    readonly ghContext: typeof context
 
     constructor(githubToken: string) {
         this.args = getActionArgs()
         this.ghClient = new Octokit({ auth: githubToken })
-        this.ghContext = new Context()
+        this.ghContext = context
     }
 
     async run(): Promise<void> {
